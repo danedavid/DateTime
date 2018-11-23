@@ -116,6 +116,12 @@ class Date extends React.Component {
         this.setState({ day: `01` });
       } else if ( day === `31` ) {
         this.setState({ day: `01` });
+      } else if ( day === `30` && !longMonths.includes(month) ) {
+        this.setState({ day: `01` });
+      } else if ( day === '28' && month === `02` && !Moment([year]).isLeapYear() ) {
+        this.setState({ day: `01` });
+      } else if ( day === '29' && month === `02` && Moment([year]).isLeapYear() ) {
+        this.setState({ day: `01` });
       } else {
         const nextDay = ('0' + (parseInt(day) + 1)).slice(-2);
         this.setState({ day: `${nextDay}` });
@@ -144,7 +150,15 @@ class Date extends React.Component {
       if ( day === DD ) {
         this.setState({ day: `31` });
       } else if ( day === `01` ) {
-        this.setState({ day: `31` });
+        if ( month === '02' && !Moment([year]).isLeapYear() ) {
+          this.setState({ day: `28` })
+        } else if ( month === `02` && Moment([year]).isLeapYear() ) {
+          this.setState({ day: `29` });
+        } else if ( !longMonths.includes(month) ) {
+          this.setState({ day: `30` });
+        } else {
+          this.setState({ day: `31` });
+        }
       } else {
         const nextDay = ('0' + (parseInt(day) - 1)).slice(-2);
         this.setState({ day: `${nextDay}` });
