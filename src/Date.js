@@ -9,30 +9,59 @@ const DD = 'DD';
 const MM = 'MM';
 const YYYY = 'YYYY';
 
+const MMDDYYYY = 'MMDDYYYY';
+const DDMMYYYY = 'DDMMYYYY';
+
 const ARROW_LEFT = 37;
 const ARROW_RIGHT = 39;
 const ARROW_UP = 38;
 const ARROW_DOWN = 40;
 
-const indexTable = {
-  DAY: {
-    start: 0,
-    end: 2,
-  },
-  MONTH: {
-    start: 3,
-    end: 5,
-  },
-  YEAR: {
-    start: 6,
-    end: 10,
-  },
+const FIRST = {
+  start: 0,
+  end: 2,
 };
 
-const cyclicList = {
-  DAY: { next: MONTH, prev: YEAR },
-  MONTH: { next: YEAR, prev: DAY },
-  YEAR: { next: DAY, prev: MONTH },
+const SECOND = {
+  start: 3,
+  end: 5,
+};
+
+const LAST = {
+  start: 6,
+  end: 10,
+};
+
+const getIndexTable = (format) => {
+  if ( format === MMDDYYYY ) {
+    return {
+      DAY: SECOND,
+      MONTH: FIRST,
+      YEAR: LAST,
+    };
+  } else if ( format === DDMMYYYY ) {
+    return {
+      DAY: FIRST,
+      MONTH: SECOND,
+      YEAR: LAST,
+    };
+  }
+};
+
+const getCyclicList = (format) => {
+  if ( format === MMDDYYYY ) {
+    return {
+      DAY: { next: YEAR, prev: MONTH },
+      MONTH: { next: DAY, prev: YEAR },
+      YEAR: { next: DAY, prev: MONTH },
+    };
+  } else if ( format === DDMMYYYY ) {
+    return {
+      DAY: { next: MONTH, prev: YEAR },
+      MONTH: { next: YEAR, prev: DAY },
+      YEAR: { next: DAY, prev: MONTH },
+    };
+  }
 };
 
 const longMonths = ['01', '03', '05', '07', '08', '10', '12', MM];
@@ -68,6 +97,7 @@ class Date extends React.Component {
   selectDateUnit() {
     const input = this.inputEl;
     const { selected } = this.state;
+    const indexTable = getIndexTable(this.props.format);
     const { start, end } = indexTable[selected];
 
     input.focus();
@@ -75,11 +105,13 @@ class Date extends React.Component {
   }
 
   selectPrev() {
+    const cyclicList = getCyclicList(this.props.format);
     this.validateAndFix();
     this.setState(prevState => ({ selected: cyclicList[prevState.selected].prev }));
   }
 
   selectNext() {
+    const cyclicList = getCyclicList(this.props.format);
     this.validateAndFix();
     this.setState(prevState => ({ selected: cyclicList[prevState.selected].next }));
   }
@@ -242,26 +274,36 @@ class Date extends React.Component {
   handleClick(ev) {
     const input = this.inputEl;
     const cursorPosition = input.selectionStart;
+    const indexTable = getIndexTable(this.props.format);
 
     ev.preventDefault();
 
-    if ( cursorPosition <=2 ) {
-      this.setState({ selected: DAY });
-    } else if ( cursorPosition >=3 && cursorPosition <=5 ) {
-      this.setState({ selected: MONTH });
-    } else if ( cursorPosition >=6 ) {
-      this.setState({ selected: YEAR });
-    }
+    [DAY, MONTH, YEAR].forEach(dateUnit => {
+      const { start, end } = indexTable[dateUnit];
+
+      if ( cursorPosition >= start && cursorPosition <= end ) {
+        this.setState({ selected: dateUnit });
+      }
+    });
   }
 
   render() {
     const { day, month, year } = this.state
+    const { format } = this.props;
+
+    let value;
+
+    switch (format) {
+      case MMDDYYYY: value = `${month}-${day}-${year}`; break;
+      case DDMMYYYY: value = `${day}-${month}-${year}`; break;
+      default: console.error('Invalid `format` prop given'); value = `${month}-${day}-${year}`;
+    }
     
     return (
       <div>
         <input
           type="text"
-          value={`${day}-${month}-${year}`}
+          value={value}
           onKeyDown={this.handleKeyDown}
           onKeyPress={this.handleKeyPress}
           onChange={() => {}}
