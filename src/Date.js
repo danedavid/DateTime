@@ -289,13 +289,13 @@ class Date extends React.Component {
 
   render() {
     const { day, month, year } = this.state
-    const { format } = this.props;
+    const { format, separator } = this.props;
 
     let value;
 
     switch (format) {
-      case MMDDYYYY: value = `${month}-${day}-${year}`; break;
-      case DDMMYYYY: value = `${day}-${month}-${year}`; break;
+      case MMDDYYYY: value = `${month}${separator}${day}${separator}${year}`; break;
+      case DDMMYYYY: value = `${day}${separator}${month}${separator}${year}`; break;
       default: console.error('Invalid `format` prop given'); value = `${month}-${day}-${year}`;
     }
     

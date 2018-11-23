@@ -7,31 +7,59 @@ const DDMMYYYY = 'DDMMYYYY';
 
 class App extends Component {
   state = {
-    format: MMDDYYYY
+    format: MMDDYYYY,
+    separator: '-',
   }
 
   handleChange = ev => {
     this.setState({ format: ev.target.value });
   }
+
+  handleSeparatorChange = ev => {
+    this.setState({ separator: ev.target.value });
+  }
   render() {
-    const { format } = this.state;
+    const { format, separator } = this.state;
     return (
       <>
         <Date
           format={format}
+          separator={separator}
         />
-        <input
-          type='radio'
-          checked={format === MMDDYYYY}
-          value={MMDDYYYY}
-          onChange={this.handleChange}
-        />
-        <input
-          type='radio'
-          checked={format === DDMMYYYY}
-          value={DDMMYYYY}
-          onChange={this.handleChange}
-        />
+        <div>
+        MMDDYYYY<input
+            type='radio'
+            checked={format === MMDDYYYY}
+            value={MMDDYYYY}
+            onChange={this.handleChange}
+          />
+          DDMMYYYY<input
+            type='radio'
+            checked={format === DDMMYYYY}
+            value={DDMMYYYY}
+            onChange={this.handleChange}
+          />
+        </div>
+        <div>
+          -<input
+            type='radio'
+            checked={separator === '-'}
+            value={'-'}
+            onChange={this.handleSeparatorChange}
+          />
+          /<input
+            type='radio'
+            checked={separator === '/'}
+            value={'/'}
+            onChange={this.handleSeparatorChange}
+          />
+          .<input
+            type='radio'
+            checked={separator === '.'}
+            value={'.'}
+            onChange={this.handleSeparatorChange}
+          />
+        </div>
       </>
     );
   }
