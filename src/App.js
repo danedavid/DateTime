@@ -18,6 +18,11 @@ class App extends Component {
   handleSeparatorChange = ev => {
     this.setState({ separator: ev.target.value });
   }
+
+  onDateChange = date => {
+    console.log(date.toString());
+  }
+  
   render() {
     const { format, separator } = this.state;
     return (
@@ -25,6 +30,7 @@ class App extends Component {
         <Date
           format={format}
           separator={separator}
+          onDateChange={this.onDateChange}
         />
         <div>
         MMDDYYYY<input

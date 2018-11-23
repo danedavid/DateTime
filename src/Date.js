@@ -90,8 +90,15 @@ class Date extends React.Component {
     this.selectDateUnit();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(_, prevState) {
     this.selectDateUnit();
+    if (
+      prevState.day !== this.state.day
+      || prevState.month !== this.state.month
+      || prevState.year !== this.state.year
+    ) {
+      this.handleDateChange();
+    }
   }
 
   selectDateUnit() {
@@ -285,6 +292,17 @@ class Date extends React.Component {
         this.setState({ selected: dateUnit });
       }
     });
+  }
+
+  handleDateChange() {
+    const { day, month, year } = this.state;
+    const { onDateChange } = this.props;
+
+    const date = new Moment(`${day}-${month}-${year}`, 'DD-MM-YYYY', true);
+
+    if ( date.isValid() ) {
+      onDateChange(date);
+    }
   }
 
   render() {
