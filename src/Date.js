@@ -50,6 +50,7 @@ class Date extends React.Component {
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     // this.selectDateUnit = this.selectDateUnit.bind(this);
     // this.selectNext = this.selectNext.bind(this);
     // this.selectPrev = this.selectPrev.bind(this);
@@ -65,7 +66,7 @@ class Date extends React.Component {
   }
 
   selectDateUnit() {
-    const input = this.inputEl
+    const input = this.inputEl;
     const { selected } = this.state;
     const { start, end } = indexTable[selected];
 
@@ -224,6 +225,21 @@ class Date extends React.Component {
     }
   }
 
+  handleClick(ev) {
+    const input = this.inputEl;
+    const cursorPosition = input.selectionStart;
+
+    ev.preventDefault();
+
+    if ( cursorPosition <=2 ) {
+      this.setState({ selected: DAY });
+    } else if ( cursorPosition >=3 && cursorPosition <=5 ) {
+      this.setState({ selected: MONTH });
+    } else if ( cursorPosition >=6 ) {
+      this.setState({ selected: YEAR });
+    }
+  }
+
   render() {
     const { day, month, year } = this.state
     
@@ -235,6 +251,7 @@ class Date extends React.Component {
           onKeyDown={this.handleKeyDown}
           onKeyPress={this.handleKeyPress}
           onChange={() => {}}
+          onClick={this.handleClick}
           ref={el => this.inputEl = el}
         />
       </div>
