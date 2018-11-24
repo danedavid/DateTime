@@ -80,10 +80,6 @@ class Date extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    // this.selectDateUnit = this.selectDateUnit.bind(this);
-    // this.selectNext = this.selectNext.bind(this);
-    // this.selectPrev = this.selectPrev.bind(this);
-    // this.incrementDateUnit = this.incrementDateUnit.bind(this);
   }
 
   componentDidMount() {
@@ -318,17 +314,15 @@ class Date extends React.Component {
     }
     
     return (
-      <div>
-        <input
-          type="text"
-          value={value}
-          onKeyDown={this.handleKeyDown}
-          onKeyPress={this.handleKeyPress}
-          onChange={() => {}}
-          onClick={this.handleClick}
-          ref={el => this.inputEl = el}
-        />
-      </div>
+      <input
+        type="text"
+        value={value}
+        onKeyDown={this.handleKeyDown}
+        onKeyPress={this.handleKeyPress}
+        onChange={() => {}}
+        onClick={this.handleClick}
+        ref={el => this.inputEl = el}
+      />
     );
   }
 }
